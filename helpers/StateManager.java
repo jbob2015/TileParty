@@ -8,6 +8,7 @@ import java.util.concurrent.*;
 import main.*;
 import main.editor.*;
 import main.game.*;
+import main.game.Game.*;
 import main.game.Bombed.*;
 import main.game.Bubbles.*;
 import main.game.minitank.*;
@@ -32,12 +33,13 @@ public class StateManager {
         BUBBLES
     }
 
-    public static GameState state = GameState.TITLE;
+    public static volatile GameState state = GameState.TITLE;
     // Create Map To Be Used in Game/Editor
-    public static TileGrid map = new TileGrid(T_WIDTH, T_HEIGHT);
+    public static TileGrid map = //new TileGrid(T_WIDTH, T_HEIGHT);
+            TileGrid.deserialize(TPDatabase.DeserializeFromFile("mapData.tp"));
 
-    public static Client client = new Client("68.0.212.220", 8192);
-    //public static Client client = new Client("localhost", 8192);
+//    public static Client client = new Client("68.0.212.220", 8192);
+    public static Client client = new Client("localhost", 8192);
     public static TPDatabase database;
 
     public static ArrayList<Integer> sounds = new ArrayList<>();
@@ -89,7 +91,13 @@ public class StateManager {
      *            state to change to
      */
     public static void changeState(GameState s) {
-
+        if (state == GameState.GAME && s == GameState.BOMBED
+                || s == GameState.BUBBLES) {
+            //Will Have to Update For Other Minigames
+            database = new TPDatabase("GameState");
+            StateManager.game.serialize(database);
+            client.send(database);
+        }
         switch (s) {
             case BOMBED:
                 break;
@@ -97,6 +105,8 @@ public class StateManager {
                 break;
             case EDITOR:
                 title = null;
+                lobby = null;
+                gamePaused = null;
                 break;
             case EDITORPAUSED:
                 break;
@@ -104,6 +114,8 @@ public class StateManager {
                 title = null;
                 gamePaused = null;
                 lobby = null;
+                bombed = null;
+                bubbles = null;
                 Lobby.packets.clear();
                 break;
             case GAMEPAUSED:
@@ -211,10 +223,16 @@ public class StateManager {
                 }
                 break;
             case GAMEPAUSED:
-//                gamePaused.draw();
+                game.draw();
+                if (gamePaused != null) {
+                    gamePaused.draw();
+                }
                 break;
             case EDITORPAUSED:
-//                editorPaused.draw();
+                editor.draw();
+                if (editorPaused != null) {
+                    editorPaused.draw();
+                }
                 break;
             default:
                 break;
@@ -247,6 +265,9 @@ public class StateManager {
                                 .findField("ID").getInt());
                     }
                     break;
+                case "G":
+                    StateManager.changeState(GameState.GAME);
+                    break;
                 case "TurnInfo":
                     if (game != null) {
                         game.turnCount = database.objects.get(0)
@@ -256,16 +277,17 @@ public class StateManager {
                                 .findField("currentPlayer").getInt();
                         if (game.currentPlayer != 0
                                 && game.currentPlayer != temp) {
-                            System.out.println(temp);
+                            System.out.println(
+                                    "Current Player is: Player " + temp);
                             game.handleTileAction(
                                     game.getPlayer(game.currentPlayer));
                         }
 
                         game.currentPlayer = temp; //TODO
-
-//                        System.out.println(
-//                                "Turn #" + game.turnCount + "\t--\tPlayer "
-//                                        + game.currentPlayer + "\'s Turn");
+                        if (game.currentPlayer != client.userID
+                                && game.player.turnState != TurnState.WAITING) {
+                            game.player.turnState = TurnState.WAITING;
+                        }
                     }
                     break;
 
@@ -435,6 +457,7 @@ public class StateManager {
             changeSong = !changeSong;
             changeSong(-1);
         }
+        editor.update();
         editorPaused.update();
     }
 

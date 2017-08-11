@@ -23,8 +23,8 @@ public class Handler {
 
     private static ArrayList<Integer> sounds = new ArrayList<Integer>();
 
-    public static int WIDTH, HEIGHT, T_WIDTH, T_HEIGHT;
-    public static int PIXELS = 32;
+    public static int WIDTH, HEIGHT, T_WIDTH = 64, T_HEIGHT = 64;
+    public static int PIXELS = 64;
 
     public static long window, device, arrowCursor, menuCursor, handCursor;
 
@@ -61,8 +61,18 @@ public class Handler {
         GLFWVidMode monitor = glfwGetVideoMode(glfwGetPrimaryMonitor());
         WIDTH = monitor.width();
         HEIGHT = monitor.height();
-        T_WIDTH = 100; //TODO
-        T_HEIGHT = HEIGHT / PIXELS;
+
+        if (WIDTH / HEIGHT != 16 / 9) {
+            System.out.println("Yep");
+            int width = 0;
+            int height = 0;
+            for (; height <= HEIGHT - 9
+                    && width <= WIDTH; height += 9, width += 16) {
+            }
+
+            WIDTH = width;
+            HEIGHT = height;
+        }
 
         /**
          * Create and Show Window
@@ -94,10 +104,8 @@ public class Handler {
         /**
          * Create FullScreen Window and Set Tile Width/Height Based on Size
          */
-        WIDTH = 800;
-        HEIGHT = 600;
-        T_WIDTH = 100; //TODO
-        T_HEIGHT = HEIGHT / PIXELS;
+        WIDTH = 1024;
+        HEIGHT = 576;
 
         glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
@@ -265,7 +273,7 @@ public class Handler {
     }
 
     public static void changeCursor(int id) {
-        if (id < 5) {
+        if (id < 7 && id > 0) {
             arrowCursor = createCursor(id);
             glfwSetCursor(window, arrowCursor);
         } else {

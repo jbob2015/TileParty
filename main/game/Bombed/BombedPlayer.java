@@ -47,21 +47,14 @@ public abstract class BombedPlayer {
 
     public BombedPlayer(Player player) {
         this.player = player;
-        if (this.player.userID < 5) {
+        if (this.player.userID < 7 && this.player.userID > 0) {
             this.dead = new Texture("dead" + this.player.userID);
             this.leftWalking
                     .addFrame("leftWalking" + this.player.userID + "-1");
             this.leftWalking
                     .addFrame("leftWalking" + this.player.userID + "-2");
-            this.standing.addFrame("standing" + this.player.userID + "-1");
-            this.standing.addFrame("standing" + this.player.userID + "-2");
-        } else {
-            this.dead = new Texture("dead");
-            this.leftWalking.addFrame("leftWalking1");
-            this.leftWalking.addFrame("leftWalking2");
-            this.standing.addFrame("standing1");
-            this.standing.addFrame("standing2");
-
+            this.standing.addFrame("idle" + this.player.userID + "-1");
+            this.standing.addFrame("idle" + this.player.userID + "-2");
         }
     }
 
@@ -69,20 +62,20 @@ public abstract class BombedPlayer {
         switch (this.state) {
             case LEFT:
                 this.leftWalking.update();
-                this.leftWalking.draw(-48 + this.x, this.y);
+                this.leftWalking.draw(-24 + this.x, this.y);
                 break;
             case RIGHT:
-                this.player.walking.update();
-                this.player.walking.draw(-48 + this.x, this.y);
+                this.player.rightWalking.update();
+                this.player.rightWalking.draw(-24 + this.x, this.y);
                 break;
             case STANDING:
                 this.standing.update();
-                this.standing.draw(-48 + this.x, this.y);
+                this.standing.draw(-24 + this.x, this.y);
                 this.leftWalking.restart();
-                this.player.walking.restart();
+                this.player.rightWalking.restart();
                 break;
             case DEAD:
-                drawQuadTex(this.dead, -48 + this.x, this.y, 128, 128);
+                drawQuadTex(this.dead, -24 + this.x, this.y, 64, 128);
                 break;
             default:
                 break;

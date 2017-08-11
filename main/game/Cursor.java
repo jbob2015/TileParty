@@ -12,11 +12,7 @@ public class Cursor {
     public Cursor(int x, int y, int id) {
         this.x = x;
         this.y = y;
-        if (id < 5) {
-            this.cursor = new Texture("cursor" + id);
-        } else {
-            this.cursor = new Texture("cursor");
-        }
+        this.cursor = new Texture("cursor" + id);
     }
 
     public void draw() {

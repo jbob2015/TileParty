@@ -8,12 +8,17 @@ public class Tile {
     public Texture texture;
     public TileType type;
     public boolean editable = true;
+    public Animation animation;
 
     public Tile(int x, int y, TileType type) {
         this.setX(x);
         this.setY(y);
         this.setType(type);
-        this.setTexture(new Texture(type.textureName));
+        if (!type.animated) {
+            this.setTexture(new Texture(type.textureName));
+        } else {
+            this.animation = new Animation(type);
+        }
     }
 
     /**
@@ -21,8 +26,13 @@ public class Tile {
      */
     public void draw() {
         if (!this.type.equals(TileType.Null)) {
-            drawQuadTex(this.texture, this.x * PIXELS, this.y * PIXELS, PIXELS,
-                    PIXELS);
+            if (!this.type.animated) {
+                drawQuadTex(this.texture, this.x * PIXELS, this.y * PIXELS,
+                        PIXELS, PIXELS);
+            } else {
+                this.animation.update();
+                this.animation.draw(this.x * PIXELS, this.y * PIXELS);
+            }
         }
     }
 

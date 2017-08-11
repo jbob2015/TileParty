@@ -55,6 +55,23 @@ public class Panel {
         this.buttonList.add(name);
     }
 
+    public void addButton(String string, int i, int j, boolean b) {
+        Button temp = new Button(string,
+                this.x + i * this.bWidth + (i + 1) * SPACE,
+                this.y + j * this.bHeight + (j + 1) * SPACE, b);
+        this.buttonGrid[i][j] = temp;
+        this.buttonList.add(temp);
+    }
+
+    public void addButton(String string, int i, int j, double scale,
+            boolean b) {
+        Button temp = new Button(string,
+                this.x + i * this.bWidth + (i + 1) * SPACE,
+                this.y + j * this.bHeight + (j + 1) * SPACE, scale, b);
+        this.buttonGrid[i][j] = temp;
+        this.buttonList.add(temp);
+    }
+
     public void addButton(String name, int x, int y, double scale) {
         Button temp = new Button(name,
                 this.x + x * this.bWidth + (x + 1) * SPACE,
@@ -98,6 +115,15 @@ public class Panel {
 
     public ArrayList<Button> getButtonList() {
         return this.buttonList;
+    }
+
+    public boolean isClicked(String name) {
+        for (Button b : this.buttonList) {
+            if (b.name.equals(name)) {
+                return b.isClicked();
+            }
+        }
+        return false;
     }
 
 }

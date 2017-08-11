@@ -17,7 +17,7 @@ public class Bombed {
     public static ClientBombedPlayer player = new ClientBombedPlayer(
             StateManager.game.player);
     private static ArrayList<NetBombedPlayer> bombedPlayers = new ArrayList<>();
-    private static Texture background = new Texture("sky");
+    private static Texture background = new Texture("null");
     private static int backgroundOffset = 0;
 
     public static Queue<TPDatabase> packets = new ConcurrentLinkedQueue<TPDatabase>();

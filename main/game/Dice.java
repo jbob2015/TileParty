@@ -11,7 +11,7 @@ public class Dice {
     public int roll;
     public int x;
     public int y;
-    public double scale = 1;
+    public double scale = 4;
 
     public long lastTime;
     public static int sound = loadSound("diceRoll");
@@ -25,6 +25,7 @@ public class Dice {
         this.x = x;
         this.y = y;
         this.dice.setFrame(this.roll - 1);
+        this.dice.scale = 8;
     }
 
     public Dice(int x, int y, double scale) {
@@ -35,7 +36,7 @@ public class Dice {
         this.x = x;
         this.y = y;
         this.dice.setFrame(this.roll - 1);
-        this.scale = scale;
+        this.dice.scale = scale;
     }
 
     /**

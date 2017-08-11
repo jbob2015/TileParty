@@ -138,7 +138,8 @@ public class Client {
                     this.process(dbD);
                     break;
                 case 'G':
-                    StateManager.changeState(GameState.GAME);
+                    TPDatabase dbG = new TPDatabase("G");
+                    this.process(dbG);
                     break;
                 case 'F':
                     //Server Full Packet

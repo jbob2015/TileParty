@@ -18,9 +18,9 @@ public class Boot {
         try {
 
             // Setup OpenGL, OpenAL, GLFW
-            beginSession();
+            //beginSession();
 
-            //debugSession();
+            debugSession();
 
             // Start GameStateManager
             StateManager manager = new StateManager();

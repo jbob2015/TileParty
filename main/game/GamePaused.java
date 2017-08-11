@@ -20,7 +20,6 @@ public class GamePaused {
      */
     public void update() {
         updateInput();
-        ui.draw();
     }
 
     /**
@@ -28,9 +27,10 @@ public class GamePaused {
      */
     private static void createUI() {
         ui = new UI();
-        ui.addPanel("panel", WIDTH / 2 - 128 - 12, HEIGHT / 5, 1, 3, 256, 128);
-        ui.getPanel("panel").addButton("resume", 0, 0);
-        ui.getPanel("panel").addButton("menu", 0, 2);
+        ui.addPanel("panel", WIDTH / 2 - (128 - 8),
+                HEIGHT / 2 - (16 + 128 + 64), 1, 3, 64 * 4, 28 * 4);
+        ui.getPanel("panel").addButton("resume", 0, 0, 4);
+        ui.getPanel("panel").addButton("exit", 0, 2, 4);
     }
 
     /**
@@ -45,5 +45,9 @@ public class GamePaused {
                 || Keyboard.isClicked(Key.E)) {
             StateManager.changeState(GameState.GAME);
         }
+    }
+
+    public void draw() {
+        ui.draw();
     }
 }

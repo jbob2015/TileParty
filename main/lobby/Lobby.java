@@ -24,7 +24,7 @@ public class Lobby {
     public Lobby(byte id) {
         for (byte i = 1; i <= Client.MAX_PLAYERS; i++) {
             this.clients.add(new LobbyClient(i));
-            this.sprites.add(new Texture("standing" + i + "-1"));
+            this.sprites.add(new Texture("upWalking" + i + "-1"));
             if (i != id) {
                 ui.addCheckBox(i + "",
                         (int) (WIDTH * ((float) i) / (Client.MAX_PLAYERS + 1)),
@@ -97,7 +97,7 @@ public class Lobby {
             Texture tex = this.sprites.get(i - 1);
             drawQuadTex(tex,
                     (int) (WIDTH * ((float) i) / (Client.MAX_PLAYERS + 1)) - 32,
-                    2 * HEIGHT / 3, 32, 32);
+                    2 * HEIGHT / 3 - 32, 32, 64);
             drawQuadTex(this.dice.get(i - 1),
                     (int) (WIDTH * ((float) i) / (Client.MAX_PLAYERS + 1)),
                     2 * HEIGHT / 3 - 32, 32, 32);
