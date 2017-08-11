@@ -41,7 +41,12 @@ public class Server {
 
     public enum TurnState {
 
-        WAITING(0), DECIDING(1), ROLLING(2), MOVING(3), ENDING(4);
+        WAITING(0),
+        DECIDING(1),
+        ROLLING(2),
+        MOVING(3),
+        MOVE_DECISION(4),
+        ENDING(5);
 
         public short id;
 
@@ -50,18 +55,12 @@ public class Server {
         }
 
         public static TurnState create(short id) {
-            switch (id) {
-                case 0:
-                    return TurnState.WAITING;
-                case 1:
-                    return TurnState.DECIDING;
-                case 2:
-                    return TurnState.ROLLING;
-                case 3:
-                    return TurnState.MOVING;
-                default:
-                    return TurnState.WAITING;
+            for (TurnState t : TurnState.values()) {
+                if (t.id == id) {
+                    return t;
+                }
             }
+            return null;
         }
 
     }
@@ -280,40 +279,47 @@ public class Server {
                 break;
             case "LobbyState":
                 //TODO can crash if game isn't started...
-                this.state = GameState.LOBBY;
-                ServerClient currentClient = this.getClient(
-                        database.objects.get(0).findField("ID").getInt());
-                currentClient.ready = database.objects.get(0).findField("ready")
-                        .getBoolean();
-                currentClient.roll = database.objects.get(0).findField("roll")
-                        .getByte();
-                if (this.allReady()) {
-                    for (int i = 0; i < this.turnOrder.length; i++) {
-                        this.turnOrder[i] = (byte) this.clients.get(i).userID;
-                    }
-                    for (int i = 1; i < this.turnOrder.length; i++) {
-                        for (int j = i; j > 0; j--) {
-                            ServerClient client1 = this
-                                    .getClient(this.turnOrder[j]);
-                            ServerClient client2 = this
-                                    .getClient(this.turnOrder[j - 1]);
-                            if (client1.roll > client2.roll) {
-                                byte tempByte = this.turnOrder[j];
-                                this.turnOrder[j] = this.turnOrder[j - 1];
-                                this.turnOrder[j - 1] = tempByte;
+                if (!this.gameStarted) {
+                    this.state = GameState.LOBBY;
+                    ServerClient currentClient = this.getClient(
+                            database.objects.get(0).findField("ID").getInt());
+                    currentClient.ready = database.objects.get(0)
+                            .findField("ready").getBoolean();
+                    currentClient.roll = database.objects.get(0)
+                            .findField("roll").getByte();
+                    if (this.allReady()) {
+                        for (int i = 0; i < this.turnOrder.length; i++) {
+                            this.turnOrder[i] = (byte) this.clients
+                                    .get(i).userID;
+                        }
+                        for (int i = 1; i < this.turnOrder.length; i++) {
+                            for (int j = i; j > 0; j--) {
+                                ServerClient client1 = this
+                                        .getClient(this.turnOrder[j]);
+                                ServerClient client2 = this
+                                        .getClient(this.turnOrder[j - 1]);
+                                if (client1.roll > client2.roll) {
+                                    byte tempByte = this.turnOrder[j];
+                                    this.turnOrder[j] = this.turnOrder[j - 1];
+                                    this.turnOrder[j - 1] = tempByte;
+                                }
                             }
                         }
+                        for (ServerClient client : this.clients) {
+                            this.send(this.startMessage, client.address,
+                                    client.port);
+                        }
+                        System.out.println(Arrays.toString(this.turnOrder));
+                        this.gameStarted = true;
+                        this.initTurnQueue();
+                        this.currentPlayer = this.turnQueue.poll();
+                        this.state = GameState.GAME;
                     }
-                    for (ServerClient client : this.clients) {
-                        this.send(this.startMessage, client.address,
-                                client.port);
-                    }
-                    System.out.println(Arrays.toString(this.turnOrder));
-                    this.gameStarted = true;
-                    this.initTurnQueue();
-                    this.currentPlayer = this.turnQueue.poll();
+                } else {
+                    ServerClient client = this.getClient(
+                            database.objects.get(0).findField("ID").getInt());
+                    this.send(this.startMessage, client.address, client.port);
                 }
-                break;
         }
 
         int temp = database.objects.get(0).findField("ID").getInt();

@@ -16,7 +16,7 @@ public class TilePartyServer implements ActionListener {
     public static JTextPane print = new JTextPane();
     public static JScrollPane temp = new JScrollPane(print);
     public static JButton start = new JButton("Start Server");
-    public static SpinnerModel model = new SpinnerNumberModel(1, 1, 4, 1);
+    public static SpinnerModel model = new SpinnerNumberModel(1, 1, 6, 1);
     public static JSpinner spinner = new JSpinner(model);
 
     public static JMenuBar menuBar = new JMenuBar();
