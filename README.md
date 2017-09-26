@@ -1,8 +1,13 @@
-## Tile Party
+# Tile Party
 
 Tile Party is a project I developed over Summer 2017 in efforts to learn all aspects of game development. I used OpenGL to learn basic rendering concepts, and built my own game engine from scratch. The game is a board game, with minigames, and has online multiplayer. I finished 2 minigames, with my main focus being on the framework to add content in the future. I worked directly with an artist, and we managed to have a working demo done in 3 months of work. I plan on coming back to this project in the future, because it is very easy to add minigames and new content using the code I have already written.
 
+## Click Below to Watch Demo
+
 [![Tile Party](http://img.youtube.com/vi/ceSI5azse38/0.jpg)](http://www.youtube.com/watch?v=ceSI5azse38 "Tile Party Demo Video")
+
+
+
 
 I found many useful resources during along the way, and will list some here:
 
