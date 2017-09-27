@@ -9,7 +9,7 @@ Tile Party is a project I developed over Summer 2017 in efforts to learn all asp
 
 
 
-I found many useful resources during along the way, and will list some here:
+I found many useful resources along the way, and will list some here:
 
 [The Cherno Project](https://www.youtube.com/user/TheChernoProject "The Cherno Project") - Invaluable resource when it came to game development. I learned about serialization and basic networking from him, can't say enough.
 
